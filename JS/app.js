@@ -41,7 +41,7 @@ const displaPhones = (phones, dataLimit) =>{
                    <h5 class="card-title">${phone.phone_name}</h5>
                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in
                    to additional content. This content is a little bit longer.</p>
-                   <button onclick="loadPhoneDetails('${phone.slug}')" href="#" class="btn btn-primary">Details</button>
+                   <button onclick="loadPhoneDetails('${phone.slug}')" href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#phoneDetailsModal">Details</button>
                 </div>
             </div>
         `;
@@ -94,8 +94,25 @@ const loadPhoneDetails = async(id) => {
     const url = `https://openapi.programming-hero.com/api/phone/${id}`;
     const res = await fetch(url);
     const data = await res.json();
-    console.log(data);
-
+    displayPhoneDetails(data.data);
 }
 
-// loadPhone()
+// Function to display phone details 
+const displayPhoneDetails = (phone) =>{
+    console.log(phone);
+    const modalTitle = document.getElementById('phoneDetailsModalLabel');
+    modalTitle.innerText = phone.name;
+    const phoneDetails = document.getElementById('phone-details');
+    phoneDetails.innerHTML = `
+                
+                <img class='details-img' src="${phone.image}" alt="">
+                <p><span class='text-danger fw-bold'>Release Date:</span> ${phone.releaseDate ? phone.releaseDate: "No Date Found"}</p>
+                <p><span class='text-danger fw-bold'>Others:</span> ${phone.others ? phone.others.Bluetooth
+                    : "No Bluetooth Info Found"}</p>
+
+    `;
+    // There is no reason to append this phoneDetails becouse we do not create it. we just set it's innen html.
+}
+
+
+loadPhone('apple');
