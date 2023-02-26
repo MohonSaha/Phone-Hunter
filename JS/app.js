@@ -12,7 +12,7 @@ const displaPhones = (phones, dataLimit) =>{
 
     // Display 10 phone only
     const showAll = document.getElementById('show-all');
-    if(dataLimit && phones.length > 10){
+    if(dataLimit > 10 && phones.length > 10){
         phones = phones.slice(0, 10);
         showAll.classList.remove('d-none');
     }
@@ -41,6 +41,7 @@ const displaPhones = (phones, dataLimit) =>{
                    <h5 class="card-title">${phone.phone_name}</h5>
                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in
                    to additional content. This content is a little bit longer.</p>
+                   <button onclick="loadPhoneDetails('${phone.slug}')" href="#" class="btn btn-primary">Details</button>
                 </div>
             </div>
         `;
@@ -51,18 +52,25 @@ const displaPhones = (phones, dataLimit) =>{
 }
 
 
-// Search precess to show data:
+//Function: Search precess to show data:
 const processSearch = (dataLimit) => {
+    //Start spinner or loader from here
     toggleSpinner(true);
     const searchField = document.getElementById('search-field');
     const searchText = searchField.value;
     loadPhone(searchText, dataLimit);
 }
 
+// Function: For search button
+document.getElementById('btn-search').addEventListener('click', function(){   
+    processSearch(10);
+})
 
-document.getElementById('btn-search').addEventListener('click', function(){
-    //Start spinner or loader
-    processSearch(9);
+// Function: For search button by Enter button
+document.getElementById('search-field').addEventListener('keypress', function(e){
+    if(e.key === 'Enter'){
+        processSearch(10);
+    }
 })
 
 
@@ -76,9 +84,18 @@ const toggleSpinner = isLoading => {
     }
 }
 
-// Show All: Not best way to show all button
+//Function: For Show All button. Not best way to show all button
 document.getElementById('btn-show-all').addEventListener('click', function(){
     processSearch();
 })
+
+// Function to load data for details button
+const loadPhoneDetails = async(id) => {
+    const url = `https://openapi.programming-hero.com/api/phone/${id}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    console.log(data);
+
+}
 
 // loadPhone()
